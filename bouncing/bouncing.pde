@@ -1,5 +1,9 @@
 float gravity = 0.2;
 int min_radius = 3;
+int num_layers = 32;
+int current_layer = 0;
+PGraphics[] layers = new PGraphics[num_layers];
+
 
 class Ball {
   PVector pos;
@@ -41,10 +45,10 @@ class Ball {
     }
   }
 
-  void draw() {
+  void draw(PGraphics g) {
     int r2 = radius * 2;
-    fill(col, 127);
-    ellipse(pos.x, pos.y, r2, r2);
+    g.fill(col, 127);
+    g.ellipse(pos.x, pos.y, r2, r2);
   }
 
   boolean finished() {
@@ -80,35 +84,19 @@ class Ball {
     b.vel = newVel2;
     b.pos.add(b.vel);
   }
-
-  /*
-  void resolveCollision(Ball b) {
-    PVector delta = PVector.sub(pos, b.pos);
-    float d = delta.mag();
-    PVector mtd = PVector.mult(delta, ((r - b.r) - d) / d);
-
-    float im1 = 1 / mass;
-    float im2 = 1 / b.mass;
-    float tim = im1 + im2;
-
-    pos.add(PVector.mult(mtd, im1 / tim));
-    b.pos.add(PVector.mult(mtd, im2 / tim));
-
-    PVector v = PVector.sub(vel, b.vel);
-    float vn = v.dot(PVector.normalize(mtd));
-
-    // Already moving away from each other
-    if (vn > 0) return;
-
-    float i =
-  }
-  */
 }
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
 
 void setup() {
-  size(480, 480);
+  size(480, 480, P2D);
+  for (int i = 0; i < num_layers; i++) {
+    PGraphics l = createGraphics(width, height, P2D);
+    l.beginDraw();
+    l.clear();
+    l.endDraw();
+    layers[i] = l;
+  }
 }
 
 void draw() {
@@ -132,9 +120,22 @@ void draw() {
     }
   }
 
-  for (Ball b : balls) {
-    b.draw();
+  for (int i = num_layers - 1; i > 0; i--) {
+    tint(255, i*2 + 16);
+    int idx = (current_layer + i) % num_layers;
+    image(layers[idx], 0, 0);
   }
+
+  PGraphics layer = layers[current_layer];
+  layer.beginDraw();
+  layer.clear();
+  for (Ball b : balls) {
+    b.draw(layer);
+  }
+  layer.endDraw();
+  tint(255, 255);
+  image(layer, 0, 0);
+  current_layer = (current_layer + 1) % num_layers;
 }
 
 Ball newRandomBall() {
