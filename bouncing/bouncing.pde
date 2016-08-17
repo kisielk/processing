@@ -75,7 +75,9 @@ class Ball {
     PVector newVel2 = PVector.mult(v1x , (2.0 * m1) / totalMass).add(PVector.mult(v2x, (m2 - m1) / totalMass)).add(v2y);
 
     this.vel = newVel1;
+    this.pos.add(this.vel);
     b.vel = newVel2;
+    b.pos.add(b.vel);
   }
 
   /*
