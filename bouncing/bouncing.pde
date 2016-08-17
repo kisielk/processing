@@ -1,4 +1,5 @@
 float gravity = 0.2;
+int min_radius = 3;
 
 class Ball {
   PVector pos;
@@ -16,7 +17,7 @@ class Ball {
     this.vel = vel;
     this.radius = radius;
     this.col = color(random(255), random(255), random(255));
-    this.mass = 1.0;
+    this.mass = 4 * PI / 3 * radius;
   }
 
   void update(float g) {
@@ -136,14 +137,20 @@ void draw() {
   }
 }
 
-void mouseDragged() {
+Ball newRandomBall() {
   int x = mouseX;
   int y = mouseY;
   int px = pmouseX;
   int py = pmouseY;
-  balls.add(new Ball(new PVector(x, y), new PVector(x - px, y - py)));
+  return new Ball(new PVector(x, y), new PVector(x - px, y - py), int(min_radius + random(10)));
+}
+
+void mouseDragged() {
+  Ball b = newRandomBall();
+  balls.add(b);
 }
 
 void mouseClicked() {
-  balls.add(new Ball(new PVector(mouseX, mouseY), new PVector(0, 0)));
+  Ball b = newRandomBall();
+  balls.add(b);
 }
