@@ -8,6 +8,7 @@ class Ball {
   int radius;
   color col;
   float mass;
+  float elasticity;
 
   Ball(PVector pos, PVector vel) {
     this(pos, vel, 5);
@@ -19,6 +20,7 @@ class Ball {
     this.radius = radius;
     this.col = color(random(255), random(255), random(255));
     this.mass = 4 * PI / 3 * radius;
+    this.elasticity = random(0.5, 0.9);
   }
 
   void update(float g) {
@@ -26,19 +28,19 @@ class Ball {
     pos.add(vel);
     if (pos.y > (height - radius)) {
       pos.y = height - radius;
-      vel.y = -vel.y * 0.9;
+      vel.y = -vel.y * elasticity;
     }
     if (pos.y < radius) {
       pos.y = radius;
-      vel.y = -vel.y * 0.9;
+      vel.y = -vel.y * elasticity;
     }
     if (pos.x > width - radius) {
       pos.x = width - radius;
-      vel.x = -vel.x * 0.9;
+      vel.x = -vel.x * elasticity;
     }
     if (pos.x < radius) {
       pos.x = radius;
-      vel.x = -vel.x * 0.9;
+      vel.x = -vel.x * elasticity;
     }
   }
 
