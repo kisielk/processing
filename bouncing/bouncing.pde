@@ -1,8 +1,5 @@
 float gravity = 0.2;
 int min_radius = 3;
-int num_layers = 32;
-int current_layer = 0;
-PGraphics[] layers = new PGraphics[num_layers];
 
 
 class Ball {
@@ -88,15 +85,19 @@ class Ball {
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
 
+PGraphics current;
+PGraphics last;
+
 void setup() {
   size(480, 480, P2D);
-  for (int i = 0; i < num_layers; i++) {
-    PGraphics l = createGraphics(width, height, P2D);
-    l.beginDraw();
-    l.clear();
-    l.endDraw();
-    layers[i] = l;
-  }
+  current = createGraphics(width, height, P2D);
+  current.beginDraw();
+  current.clear();
+  current.endDraw();
+  last = createGraphics(width, height, P2D);
+  last.beginDraw();
+  last.clear();
+  last.endDraw();
 }
 
 void draw() {
@@ -120,22 +121,17 @@ void draw() {
     }
   }
 
-  for (int i = num_layers - 1; i > 0; i--) {
-    tint(255, i*2 + 16);
-    int idx = (current_layer + i) % num_layers;
-    image(layers[idx], 0, 0);
-  }
-
-  PGraphics layer = layers[current_layer];
-  layer.beginDraw();
-  layer.clear();
+  current.beginDraw();
+  current.clear();
+  current.tint(255, 200);
+  current.image(last, 0, 0);
+  current.tint(255, 255);
   for (Ball b : balls) {
-    b.draw(layer);
+    b.draw(current);
   }
-  layer.endDraw();
-  tint(255, 255);
-  image(layer, 0, 0);
-  current_layer = (current_layer + 1) % num_layers;
+  current.endDraw();
+  image(current, 0, 0);
+  last = current;
 }
 
 Ball newRandomBall() {
