@@ -44,10 +44,10 @@ class Ball {
     }
   }
 
-  void draw(PGraphics g) {
+  void draw() {
     int r2 = radius * 2;
-    g.fill(col, 127);
-    g.ellipse(pos.x, pos.y, r2, r2);
+    fill(col, 127);
+    ellipse(pos.x, pos.y, r2, r2);
   }
 
   boolean finished() {
@@ -87,23 +87,17 @@ class Ball {
 
 ArrayList<Ball> balls = new ArrayList<Ball>();
 
-PGraphics current;
-PGraphics last;
-
 void setup() {
   size(480, 480, P2D);
-  current = createGraphics(width, height, P2D);
-  current.beginDraw();
-  current.clear();
-  current.endDraw();
-  last = createGraphics(width, height, P2D);
-  last.beginDraw();
-  last.clear();
-  last.endDraw();
 }
 
 void draw() {
-  background(204);
+  fill(204, 25);
+  noStroke();
+  rect(0, 0, width, height);
+
+  stroke(16);
+
   for (int i = balls.size() - 1; i >= 0; i--) {
     Ball b = balls.get(i);
     if (b.finished()) {
@@ -123,17 +117,9 @@ void draw() {
     }
   }
 
-  current.beginDraw();
-  current.clear();
-  current.tint(255, 200);
-  current.image(last, 0, 0);
-  current.tint(255, 255);
   for (Ball b : balls) {
-    b.draw(current);
+    b.draw();
   }
-  current.endDraw();
-  image(current, 0, 0);
-  last = current;
 }
 
 Ball newRandomBall() {
