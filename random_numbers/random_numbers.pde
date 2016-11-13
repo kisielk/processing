@@ -53,6 +53,7 @@ void Init() {
 
 void setup() {
   size(480, 480, P2D);
+  smooth(8);
   pg = createGraphics(width, height);
   Init();
 }
